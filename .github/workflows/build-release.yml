@@ -1,4 +1,4 @@
-name: windowsCI
+name: BuildApp
 
 on:
   push:
