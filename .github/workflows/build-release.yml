@@ -31,7 +31,9 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-
+    - name: List MSBuild directory
+      run: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+      
       # For WinUI builds
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.3.2
