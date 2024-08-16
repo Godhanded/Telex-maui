@@ -11,11 +11,12 @@ permissions:
   
 env:
   PROJECT_PATH: "MauiApp1.sln"
-  DOTNET_ROOT: "C:/Program Files/dotnet"
-  MSBUILD_PATH: "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe"
 
 jobs:
 
+# ***************************** #
+# >>>>>>> Windows build <<<<<<< #
+# ***************************** #
   maui-windows:
     runs-on: self-hosted
     steps:
@@ -24,20 +25,20 @@ jobs:
       with:
         fetch-depth: 0
 
+
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
-    - name: Verify MSBuild Path
-      shell: pwsh
-      run: |
-        if (-not (Test-Path $env:MSBUILD_PATH)) {
-          Write-Error "MSBuild path not found!"
-          exit 1
-        } else {
-          Write-Output "MSBuild found at $env:MSBUILD_PATH"
-        }
+
+      # For WinUI builds
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.3.2
+      with:
+        msbuild-architecture: x86
+        vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'      
+
 
     - name: Generate version number using date and run number
       shell: pwsh
@@ -46,21 +47,20 @@ jobs:
         $buildDay = Get-Date -Format "yyyy.Mdd"
         $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
         echo "APP_VERSION=$ver" >> $GITHUB_OUTPUT
-
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui 
 
+
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}  #--configfile ${{ env.NUGETCONFIG_PATH }}
+
 
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        $env:MSBUILD_PATH $env:PROJECT_PATH /p:Configuration=Release
         dotnet publish ${{ env.PROJECT_PATH }} -f net8.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win10-x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -72,6 +72,7 @@ jobs:
         draft: false
         prerelease: false
 
+
     - name: Upload Release Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
@@ -81,4 +82,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./MauiApp1/bin/Release/net8.0-windows10.0.19041.0/win10-x64/publish/MauiApp1.exe
         asset_name: MauiApp1.exe
-        asset_content_type: application/vnd.microsoft.portable-executable
+        asset_content_type: application/evnd.microsoft.portable-executable
