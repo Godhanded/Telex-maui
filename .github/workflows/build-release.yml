@@ -8,11 +8,15 @@ on:
  
 permissions:
   contents: write
-
+  
 env:
   PROJECT_PATH: "MauiApp1.sln"
 
 jobs:
+
+# ***************************** #
+# >>>>>>> Windows build <<<<<<< #
+# ***************************** #
   maui-windows:
     runs-on: self-hosted
     steps:
@@ -21,27 +25,22 @@ jobs:
       with:
         fetch-depth: 0
 
+
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
-    - name: Install vswhere.exe
-      shell: pwsh
-      run: |
-        Invoke-WebRequest -Uri "https://github.com/microsoft/vswhere/releases/download/2.9.5/vswhere.exe" -OutFile "$env:GITHUB_WORKSPACE\vswhere.exe"
-        $env:PATH += ";$env:GITHUB_WORKSPACE"
-
-    - name: Verify vswhere.exe Installation
-      shell: pwsh
-      run: |
-        & "$env:GITHUB_WORKSPACE\vswhere.exe" -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
-
+    - name: List MSBuild directory
+      run: ls "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+      
+      # For WinUI builds
     - name: Add msbuild to PATH
-      shell: pwsh
-      run: |
-        $msbuildPath = & "$env:GITHUB_WORKSPACE\vswhere.exe" -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
-        $env:PATH += ";$msbuildPath\MSBuild\Current\Bin"
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x86
+        vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'      
+
 
     - name: Generate version number using date and run number
       shell: pwsh
@@ -50,20 +49,20 @@ jobs:
         $buildDay = Get-Date -Format "yyyy.Mdd"
         $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
         echo "APP_VERSION=$ver" >> $GITHUB_OUTPUT
-
-    - name: Install MAUI workloads
+    - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui 
 
+
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      run: dotnet restore ${{ env.PROJECT_PATH }}  #--configfile ${{ env.NUGETCONFIG_PATH }}
+
 
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
         dotnet publish ${{ env.PROJECT_PATH }} -f net8.0-windows10.0.19041.0 -c Release -p:RuntimeIdentifierOverride=win10-x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -74,6 +73,7 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
+
 
     - name: Upload Release Asset
       id: upload-release-asset 
