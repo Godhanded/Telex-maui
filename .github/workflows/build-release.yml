@@ -37,7 +37,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.3.2
       with:
         msbuild-architecture: x86
-        vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'      
+        vswhere-path: 'C:\ProgramData\chocolatey\bin\vswhere.exe'      
       env:
         PROJECT_PATH: MauiApp1.sln
         DOTNET_ROOT: C:\Program Files\dotnet
