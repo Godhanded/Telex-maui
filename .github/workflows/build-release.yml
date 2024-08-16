@@ -38,7 +38,9 @@ jobs:
       with:
         msbuild-architecture: x86
         vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'      
-
+      env:
+        PROJECT_PATH: MauiApp1.sln
+        DOTNET_ROOT: C:\Program Files\dotnet
 
     - name: Generate version number using date and run number
       shell: pwsh
