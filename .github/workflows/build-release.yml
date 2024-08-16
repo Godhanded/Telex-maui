@@ -34,8 +34,10 @@ jobs:
 
       # For WinUI builds
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3.2
-    
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'
+      
 
     - name: Generate version number using date and run number
       shell: pwsh
