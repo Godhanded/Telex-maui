@@ -11,8 +11,8 @@ permissions:
   
 env:
   PROJECT_PATH: "MauiApp1.sln"
-  DOTNET_ROOT: "C:\Program Files\dotnet"
-  MSBUILD_PATH: "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
+  DOTNET_ROOT: "C:/Program Files/dotnet"
+  MSBUILD_PATH: "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe"
 
 jobs:
 
