@@ -35,12 +35,7 @@ jobs:
       # For WinUI builds
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.3.2
-      with:
-        msbuild-architecture: x86
-        vswhere-path: 'C:\ProgramData\chocolatey\bin\vswhere.exe'      
-      env:
-        PROJECT_PATH: MauiApp1.sln
-        DOTNET_ROOT: C:\Program Files\dotnet
+    
 
     - name: Generate version number using date and run number
       shell: pwsh
