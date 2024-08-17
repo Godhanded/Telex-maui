@@ -42,13 +42,13 @@ jobs:
         #vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe'      
 
 
-    - name: Generate version number using date and run number
-      shell: pwsh
-      id: version-creator
-      run: |
-        $buildDay = Get-Date -Format "yyyy.Mdd"
-        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
-        echo "APP_VERSION=$ver" >> $GITHUB_OUTPUT
+    #- name: Generate version number using date and run number
+     # shell: pwsh
+      #id: version-creator
+      #run: |
+        #$buildDay = Get-Date -Format "yyyy.Mdd"
+        #$ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
+        #echo "APP_VERSION=$ver" >> $GITHUB_OUTPUT
     - name: Install MAUI workloads (required for GitHub-hosted runners)
       shell: pwsh
       run: dotnet workload install maui 
