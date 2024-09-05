@@ -20,10 +20,10 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>MauiApp1</ApplicationTitle>
+		<ApplicationTitle>Telex</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mauiapp1</ApplicationId>
+		<ApplicationId>com.companyname.telex</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

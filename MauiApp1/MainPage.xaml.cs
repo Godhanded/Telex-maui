@@ -1,62 +1,72 @@
-﻿
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+﻿using MauiApp1.Services;
 
 namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
-        const string script = @"
-  window.addEventListener('message', (event) => {
-    const data = event.data;
-    window.webkit.messageHandlers.nativeApp.postMessage(data);
-  });
-";
+        const string getMessageScript = "GetMessage()";
+        const string removeMessageScript = "RemoveMessage()";
+        string disableContextMenuScript = @"
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+        ";
 
         public MainPage()
         {
             InitializeComponent();
+            TWebView.Navigated += WebView_Navigated;
+        }
+
+        private async void WebView_Navigated(object sender, WebNavigatedEventArgs e)
+        {
+            // Execute the script in the WebView
+            TWebView.Eval(disableContextMenuScript);
+
+            await HandleNotifications();
         }
         protected async override void OnAppearing()
         {
             base.OnAppearing();
 
-            string text = "Telex notification";
-            ToastDuration duration = ToastDuration.Short;
-            double fontSize = 14;
+            await DisplayToast("Startup", "Telex Is Now Running");
 
-            await DisplayToast(text, duration, fontSize);
         }
 
-        private async Task InjectJSEventListener()
+        private async Task HandleNotifications()
         {
-            await TWebView.EvaluateJavaScriptAsync(script);
+            while (true)
+            {
+                if (TWebView.IsLoaded)
+                {
+                    try
+                    {
+                        var message = await TWebView.EvaluateJavaScriptAsync(getMessageScript);
+                        await TWebView.EvaluateJavaScriptAsync(removeMessageScript);
+                        if (!string.IsNullOrEmpty(message) && message != "null")
+                        {
+                            var splitMessage = message.Split(',');
+                            if (splitMessage.Length == 2)
+                                await DisplayToast(splitMessage[0], splitMessage[1]);
+                        }
+                        await Task.Delay(1000); // Delay for 1 second
+
+                    }
+                    catch (Exception ex)
+                    {
+                        break;
+                    }
+                }
+                else break;
+            }
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        private static async Task DisplayToast(string title, string message)
         {
-            TWebView.Reload();
-            
-        }
+            NotificationService.ShowNotification(title, message);
+            //var toast = Toast.Make(text, duration, fontSize);
 
-        private void Button_Clicked_1(object sender, EventArgs e)
-        {
-            if( TWebView.CanGoForward)
-                TWebView.GoForward();
-        }
-
-        private void Button_Clicked_2(object sender, EventArgs e)
-        {
-            if( TWebView.CanGoBack)
-                TWebView.GoBack();
-        }
-
-        private static async Task DisplayToast (string text, ToastDuration duration, double fontSize = 14)
-        {
-            
-            var toast = Toast.Make(text, duration, fontSize);
-
-            await toast.Show();
+            //await toast.Show();
         }
     }
 
