@@ -1,6 +1,6 @@
-﻿using MauiApp1.Services;
+﻿using Telex.Services;
 
-namespace MauiApp1
+namespace Telex
 {
     public partial class MainPage : ContentPage
     {

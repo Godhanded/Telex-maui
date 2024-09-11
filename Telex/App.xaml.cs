@@ -1,4 +1,4 @@
-﻿namespace MauiApp1
+﻿namespace Telex
 {
     public partial class App : Application
     {

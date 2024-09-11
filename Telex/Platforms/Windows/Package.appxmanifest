@@ -39,7 +39,7 @@ xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
 			<!-- Register COM CLSID -->
 			<com:Extension Category="windows.comServer">
 				<com:ComServer>
-					<com:ExeServer Executable="publish\MauiApp1.exe" DisplayName="$targetnametoken$" Arguments="----AppNotificationActivated:">
+					<com:ExeServer Executable="publish\Telex.exe" DisplayName="$targetnametoken$" Arguments="----AppNotificationActivated:">
 						<!-- Example path to executable: CommunityToolkit.Maui.Sample\CommunityToolkit.Maui.Sample.exe -->
 						<com:Class Id="6e919706-2634-4d97-a93c-2213b2acc334" />
 					</com:ExeServer>

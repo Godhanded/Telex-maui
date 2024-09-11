@@ -4,7 +4,7 @@ using Windows.UI.Notifications;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace MauiApp1.WinUI
+namespace Telex.WinUI
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

@@ -1,4 +1,4 @@
-﻿namespace MauiApp1.Services
+﻿namespace Telex.Services
 {
     public static class NotificationService
     {
@@ -6,7 +6,7 @@
         {
 #if WINDOWS
             // Call the Windows-specific notification method
-            MauiApp1.WinUI.App.ShowWindowsNotification(title, message);
+            Telex.WinUI.App.ShowWindowsNotification(title, message);
 #endif
         }
     }
